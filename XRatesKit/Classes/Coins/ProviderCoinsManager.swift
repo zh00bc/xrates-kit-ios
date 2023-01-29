@@ -86,6 +86,7 @@ class ProviderCoinsManager {
         case .bep20: return 2
         case .bep2: return 3
         case .unsupported: return 4
+        default: return 5
         }
     }
 
@@ -94,23 +95,24 @@ class ProviderCoinsManager {
 extension ProviderCoinsManager {
 
     func sync() -> Single<Void> {
-        let version = storage.version(type: .providerCoins)
-
-        let remoteSingle: Single<ProviderCoinsList> = dataProvider.parse(url: URL(string: url)!)
-        return dataProvider.parse(filename: filename)
-                .flatMap { [weak self] (list: ProviderCoinsList) -> Single<ProviderCoinsList> in
-                    guard Date().timeIntervalSince1970 - TimeInterval(version) > ProviderCoinsManager.priorityUpdateInterval else {
-                        return Single.just(list)
-                    }
-
-                    self?.updateIds(list: list)
-
-                    return remoteSingle
-                }
-                .flatMap { [weak self] (list: ProviderCoinsList) -> Single<()> in
-                    self?.updateIds(list: list)
-                    return Single.just(())
-                }
+        return Single.just(())
+//        let version = storage.version(type: .providerCoins)
+//
+//        let remoteSingle: Single<ProviderCoinsList> = dataProvider.parse(url: URL(string: url)!)
+//        return dataProvider.parse(filename: filename)
+//                .flatMap { [weak self] (list: ProviderCoinsList) -> Single<ProviderCoinsList> in
+//                    guard Date().timeIntervalSince1970 - TimeInterval(version) > ProviderCoinsManager.priorityUpdateInterval else {
+//                        return Single.just(list)
+//                    }
+//
+//                    self?.updateIds(list: list)
+//
+//                    return remoteSingle
+//                }
+//                .flatMap { [weak self] (list: ProviderCoinsList) -> Single<()> in
+//                    self?.updateIds(list: list)
+//                    return Single.just(())
+//                }
     }
 
     func updatePriorities() {
